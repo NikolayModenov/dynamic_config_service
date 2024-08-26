@@ -130,3 +130,5 @@ dmypy.json
 
 # .idea
 .idea
+
+sql_db_for_tests.db

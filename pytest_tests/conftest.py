@@ -15,7 +15,7 @@ from sql_app.database import get_db
 
 @pytest.fixture(scope="session")
 def test_db_engine():
-    sqlalchemy_database_url = "sqlite:///./test_sql_app.db"
+    sqlalchemy_database_url = "sqlite:///./sql_db_for_tests.db"
     engine = create_engine(
         sqlalchemy_database_url, connect_args={"check_same_thread": False}
     )

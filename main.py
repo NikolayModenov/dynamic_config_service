@@ -6,10 +6,9 @@ from sqlalchemy.orm import Session
 from validators import validate_patch_with_proto
 
 from proto import example_pb2
-from sql_app import crud, models
-from sql_app.database import engine, get_db
+from sql_app import crud
+from sql_app.database import get_db
 
-models.Base.metadata.create_all(bind=engine)
 
 APP = FastAPI()
 

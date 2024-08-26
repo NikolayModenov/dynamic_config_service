@@ -7,5 +7,5 @@ import pytest
     ("get_final_config", HTTPStatus.OK),
     ("get_all_patches", HTTPStatus.OK),
 ))
-def test_pages_availability(default_client, url, expected_status):
-    assert default_client.get(url).status_code == expected_status
+def test_pages_availability(client, url, expected_status):
+    assert client.get(url).status_code == expected_status

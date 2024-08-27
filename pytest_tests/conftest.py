@@ -1,16 +1,15 @@
 import json
 
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from sqlalchemy_utils.functions import (
-    create_database, database_exists, drop_database
-)
+from sqlalchemy_utils.functions import create_database, database_exists
 
 from main import APP
 from sql_app import models
 from sql_app.database import get_db
+from sql_app.models import Patch
 
 
 @pytest.fixture(scope="session")
@@ -44,12 +43,47 @@ def client(test_db):
 
 
 @pytest.fixture
-def json_for_the_post_request():
-    message = {
-        "monitoring_url": "https://art.com",
-        "port": 8080,
+def dict_for_the_post_request():
+    return {
+        "monitoring_url": "https://asrt.com",
+        "port": 8280,
         "service": {
-            "timeout_ms": 100
+            "timeout_ms": 111
         }
     }
-    return json.dumps(message)
+
+
+@pytest.fixture
+def bad_dict_for_the_post_request():
+    return {
+        "mmonitoring_url": "https://asrt.com",
+        "port": 8280,
+        "service": {
+            "timeout_ms": 111
+        }
+    }
+
+
+@pytest.fixture
+def patch_dicts():
+    return [
+        {
+            "monitoring_url": "https://art.com",
+            "port": 8080,
+            "service": {
+                "timeout_ms": 212
+            }
+        },
+        {"port": 8081},
+        {"monitoring_url": ""}
+    ]
+
+
+@pytest.fixture
+def much_patches(client, test_db, patch_dicts):
+    patches = []
+    for patch_dict in patch_dicts:
+        jsoned_dict = json.dumps(patch_dict)
+        patches.append(Patch(patch=jsoned_dict))
+    test_db.add_all(patches)
+    test_db.commit()

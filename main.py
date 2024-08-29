@@ -1,12 +1,11 @@
 import json
-from typing import Dict
 
 from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
 from validators import validate_patch_with_proto
 
 from proto import example_pb2
-from sql_app import crud
+from sql_app import crud, schemas
 from sql_app.database import get_db
 
 
@@ -56,19 +55,31 @@ def get_all_patches(db: Session = DATABASE_SESSION):
 
 
 @APP.delete("/delete_patch/{patch_id}")
-def delete_patch(patch_id: int, db: Session = DATABASE_SESSION):
+def delete_patch(
+    patch_id: int,
+    db: Session = DATABASE_SESSION
+):
     return crud.del_patches(db, patch_id)
 
 
 @APP.post("/add_patch")
-def add_patch(patch: Dict, db: Session = DATABASE_SESSION):
-    validate_patch_with_proto(patch, PROTOBUF_MESSAGE)
-    jsoned_patch = json.dumps(patch)
-    return crud.create_patch(db, jsoned_patch)
+def add_patch(request: schemas.Patch, db: Session = DATABASE_SESSION):
+    validate_patch_with_proto(request.patch, PROTOBUF_MESSAGE)
+    comment = request.comment
+    jsoned_patch = json.dumps(request.patch)
+    return crud.create_patch(db, jsoned_patch, comment)
 
 
 @APP.put("/update_patch/{patch_id}")
-def update_patch(patch: Dict, patch_id: int, db: Session = DATABASE_SESSION):
-    validate_patch_with_proto(patch, PROTOBUF_MESSAGE)
-    jsoned_patch = json.dumps(patch)
-    return crud.put_patches(db, patch_id, jsoned_patch)
+def update_patch(
+        request: schemas.Patch, patch_id: int, db: Session = DATABASE_SESSION
+):
+    validate_patch_with_proto(request.patch, PROTOBUF_MESSAGE)
+    comment = request.comment
+    jsoned_patch = json.dumps(request.patch)
+    return crud.put_patches(db, patch_id, jsoned_patch, comment)
+
+
+@APP.get("/history")
+def get_history(db: Session = DATABASE_SESSION):
+    return crud.get_history_of_changes(db)

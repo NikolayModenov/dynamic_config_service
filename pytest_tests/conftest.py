@@ -87,3 +87,7 @@ def much_patches(client, test_db, patch_dicts):
         patches.append(Patch(patch=jsoned_dict))
     test_db.add_all(patches)
     test_db.commit()
+
+@pytest.fixture
+def patch_content():
+    return {"monitoring_url": "https://new.com"}

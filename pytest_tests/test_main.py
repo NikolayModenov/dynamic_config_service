@@ -7,6 +7,8 @@ from sqlalchemy import desc
 from main import proto_to_dict, PROTOBUF_MESSAGE
 from sql_app.models import History, Patch
 
+from test_routes import GET_FINAL_CONFIG_URL
+
 
 def test_response_empty_get_final_config(client):
     assert client.get(GET_FINAL_CONFIG_URL).json() == proto_to_dict(

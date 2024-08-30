@@ -45,7 +45,7 @@ def get_final_config(db: Session = DATABASE_SESSION):
     config = proto_to_dict(PROTOBUF_MESSAGE)
     for patch_object in crud.get_patches(db):
         patch = json.loads(patch_object.patch)
-        config = patching_config(config, patch)
+        config = patching_config(config, patch["patch"])
     return config
 
 

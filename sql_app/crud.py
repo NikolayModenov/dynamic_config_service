@@ -8,6 +8,9 @@ from sql_app.models import OpEnum
 from . import models
 
 
+DELETE_COMMENT = "delete patch"
+
+
 def validate_comment_in_crud(comment):
     if not comment:
         raise HTTPException(
@@ -49,7 +52,7 @@ def del_patches(db: Session, patch_id: int):
     db_patch = db.get(models.Patch, patch_id)
     validate_patch_in_crud(db_patch)
     add_patch_to_history(
-        db, db_patch.patch, OpEnum.delete, comment="deleting patch"
+        db, db_patch.patch, OpEnum.delete, comment=DELETE_COMMENT
     )
     db.delete(db_patch)
     db.commit()
@@ -61,7 +64,7 @@ def put_patches(db: Session, patch_id: int, patch: str, comment: str):
     db_patch = db.get(models.Patch, patch_id)
     validate_patch_in_crud(db_patch)
     db_patch.patch = patch
-    db_patch.timestamp_change = datetime.now()
+    db_patch.timestamp_change = datetime.utcnow().replace(microsecond=0)
     db_patch.comment = comment
     add_patch_to_history(db, patch, OpEnum.update, comment)
     db.commit()

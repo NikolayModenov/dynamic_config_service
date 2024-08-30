@@ -43,24 +43,44 @@ def client(test_db):
 
 
 @pytest.fixture
-def dict_for_the_post_request():
+def test_request():
     return {
-        "monitoring_url": "https://asrt.com",
-        "port": 8280,
-        "service": {
-            "timeout_ms": 111
-        }
+        "patch": {
+            "monitoring_url": "https://asrt.com",
+            "port": 8280,
+            "service": {
+                "timeout_ms": 111
+            }
+        },
+        "comment": "test comment"
     }
 
 
 @pytest.fixture
-def bad_dict_for_the_post_request():
+def request_with_bad_path():
     return {
-        "mmonitoring_url": "https://asrt.com",
-        "port": 8280,
-        "service": {
-            "timeout_ms": 111
-        }
+        "patch": {
+            "mmonitoring_url": "https://asrt.com",
+            "port": 8280,
+            "service": {
+                "timeout_ms": 111
+            }
+        },
+        "comment": "test_comment"
+    }
+
+
+@pytest.fixture
+def request_without_comment():
+    return {
+        "patch": {
+            "monitoring_url": "https://asrt.com",
+            "port": 8280,
+            "service": {
+                "timeout_ms": 111
+            }
+        },
+        "comment": "test_comment"
     }
 
 
@@ -68,15 +88,33 @@ def bad_dict_for_the_post_request():
 def patch_dicts():
     return [
         {
-            "monitoring_url": "https://art.com",
-            "port": 8080,
-            "service": {
-                "timeout_ms": 212
-            }
+            "patch": {
+                "monitoring_url": "https://art.com",
+                "port": 8080,
+                "service": {"timeout_ms": 212}
+            },
+            "comment": "test_comment"
         },
-        {"port": 8081},
-        {"monitoring_url": ""}
+        {
+            "patch": {"port": 8081},
+            "comment": "test_comment"
+        },
+        {
+            "patch": {"monitoring_url": ""},
+            "comment": "test_comment"
+        }
     ]
+
+
+@pytest.fixture
+def result_of_changes():
+    return {
+        "monitoring_url": "",
+        "port": 8081,
+        "service": {
+            "timeout_ms": 212
+        }
+    }
 
 
 @pytest.fixture
@@ -88,6 +126,10 @@ def much_patches(client, test_db, patch_dicts):
     test_db.add_all(patches)
     test_db.commit()
 
+
 @pytest.fixture
 def patch_content():
-    return {"monitoring_url": "https://new.com"}
+    return {
+        "patch": {"monitoring_url": "https://new.com"},
+        "comment": "test_comment"
+    }

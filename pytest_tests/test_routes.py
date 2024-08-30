@@ -7,14 +7,16 @@ GET_ALL_PATCHES_URL = "get_all_patches"
 DELETE_PATCH_URL = "delete_patch"
 ADD_PATCH_URL = "add_patch"
 UPDATE_PATCH_URL = "update_patch"
+HISTORY_URL = "history" 
 
 
-def test_availability_get_final_config(client):
-    assert client.get(GET_FINAL_CONFIG_URL).status_code == HTTPStatus.OK
-
-
-def test_availability_get_all_patches(client):
-    assert client.get(GET_ALL_PATCHES_URL).status_code == HTTPStatus.OK
+@pytest.mark.parametrize("url, expected_status", (
+    (GET_FINAL_CONFIG_URL, HTTPStatus.OK),
+    (GET_ALL_PATCHES_URL, HTTPStatus.OK),
+    (HISTORY_URL, HTTPStatus.OK)
+))
+def test_availability_get_urls(client, url, expected_status):
+    assert client.get(url).status_code == expected_status
 
 
 @pytest.mark.parametrize("url, expected_status", (
@@ -26,9 +28,9 @@ def test_availability_delete_patch(client, url, much_patches, expected_status):
     assert client.delete(url).status_code == expected_status
 
 
-def test_availability_add_patch(client, dict_for_the_post_request):
+def test_availability_add_patch(client, test_request):
     assert client.post(
-        ADD_PATCH_URL, json=dict_for_the_post_request
+        ADD_PATCH_URL, json=test_request
     ).status_code == HTTPStatus.OK
 
 

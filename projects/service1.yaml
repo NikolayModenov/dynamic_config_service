@@ -1,0 +1,6 @@
+name: Service1
+proto_name: example.ServiceConfig
+default_config: conf.yaml
+stages:
+  stage_name: prod
+  callback_url: null

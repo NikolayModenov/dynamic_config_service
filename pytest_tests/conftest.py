@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy_utils.functions import create_database, database_exists
 
+from base_configs.operations import get_name_project_file
 from main import APP
 from sql_app import models
 from sql_app.database import get_db
@@ -121,8 +122,11 @@ def result_of_changes():
 def much_patches(client, test_db, patch_dicts):
     patches = []
     for patch_dict in patch_dicts:
-        jsoned_dict = json.dumps(patch_dict)
-        patches.append(Patch(patch=jsoned_dict))
+        jsoned_dict = json.dumps(patch_dict["patch"])
+        patches.append(Patch(
+            patch=jsoned_dict, comment=patch_dict["comment"],
+            user="name", service="Service1", stage="prod"
+        ))
     test_db.add_all(patches)
     test_db.commit()
 
@@ -133,3 +137,28 @@ def patch_content():
         "patch": {"monitoring_url": "https://new.com"},
         "comment": "test_comment"
     }
+
+
+@pytest.fixture
+def service():
+    return "Service1"
+
+
+@pytest.fixture
+def stage():
+    return "prod"
+
+
+@pytest.fixture
+def good_query_parameters(service, stage):
+    return {"service": service, "stage": stage}
+
+
+@pytest.fixture
+def good_headers():
+    return {"username": "name"}
+
+
+@pytest.fixture
+def project_name(service, stage):
+    return get_name_project_file(service, stage)

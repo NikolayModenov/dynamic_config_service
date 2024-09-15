@@ -1,0 +1,3 @@
+port: 8080
+service:
+  timeout_ms: 100

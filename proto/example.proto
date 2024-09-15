@@ -1,13 +1,13 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package example;
 
 message ServiceConfig {
-  optional int32 port = 1 [default = 8080];
+  optional int32 port = 1;
   optional string monitoring_url = 2;
   optional Service service = 3;
 
   message Service {
-    optional int32 timeout_ms = 1 [default = 100];
+    optional int32 timeout_ms = 1;
   }
 }

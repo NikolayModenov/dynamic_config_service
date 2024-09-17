@@ -1,5 +1,5 @@
-import json
 from http import HTTPStatus
+import json
 
 from fastapi import Depends, FastAPI, HTTPException, Request
 from google.protobuf.json_format import ParseDict
@@ -10,6 +10,7 @@ from base_configs.operations import (
 )
 from sql_app import crud, schemas
 from sql_app.database import get_db
+
 
 APP = FastAPI()
 
